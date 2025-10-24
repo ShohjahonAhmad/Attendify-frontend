@@ -5,6 +5,7 @@ import Logo from "../utils/Logo"
 import { register } from "../api";
 
 export async function action ({request}) {  
+    console.log("in action")
     const formData = await request.formData();
     const password = formData.get("password");
     const confirmPassword = formData.get("confirmPassword")
@@ -12,7 +13,9 @@ export async function action ({request}) {
         if(password !== confirmPassword){
             return "Password and confirm password don't match"
         }
-        const data = await register(Object.fromEntries(formData.entries()));  
+        const form = Object.fromEntries(formData.entries())
+        delete form.confirmPassword
+        const data = await register(form);  
         localStorage.setItem("user", data); 
         return redirect("/")
     } catch (err) {
@@ -25,6 +28,7 @@ const Registration = () => {
   const [showPassword2, setShowPassword2] = useState(false)
   const errorMessage = useActionData()
   const navigation = useNavigation();
+  console.log(errorMessage)
   const baseInput = "mt-2 block px-3 py-1.5 outline-1 -outline-offset-1 outline-white/10 text-white rounded-md text-base bg-white/5 w-full placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
 
   function handleShowPassword() {
@@ -42,7 +46,7 @@ const Registration = () => {
             {errorMessage && (
             <div className="text-center">
                 <p className="text-sm font-medium text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2 inline-block">
-                {errorMessage}
+                {errorMessage.message}
                 </p>
             </div>
             )}
@@ -92,8 +96,8 @@ const Registration = () => {
                     </div>
                 </div>
                 <div>
-                <label htmlFor="org" className="block text-gray-100 font-medium text-sm/6">Organization</label>
-                    <input id="org" type="text" name="org" required placeholder="e.g. university or company"
+                <label htmlFor="institution" className="block text-gray-100 font-medium text-sm/6">Organization</label>
+                    <input id="institution" type="text" name="institution" required placeholder="e.g. university or company"
                         className={baseInput}/>
                 </div>
 

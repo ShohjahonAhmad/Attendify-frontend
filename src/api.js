@@ -31,6 +31,7 @@ export async function login(loginData) {
 }
 
 export async function register(registerData) {
+  console.log("in api call");
   try {
     const res = await fetch(`${baseUrl}/auth/registration`, {
       method: "POST",
