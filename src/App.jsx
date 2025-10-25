@@ -8,6 +8,7 @@ function App() {
       <Route path = '/' element = {<Home />}/>
       <Route path='/login' element = {<Login />} action = {loginAction} loader = {loginLoader}/>
       <Route path='/registration' element = {<Registration/>} action = {registrationAction}/>
+      <Route path = '*' element = {<h1>Route not found</h1>} />
 
     </Route>
   ))
