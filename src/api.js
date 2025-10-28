@@ -122,16 +122,14 @@ export async function deleteCourse(id) {
       headers: myHeaders,
     });
 
-    const data = await res.json();
-
     if (!res.ok) {
       throw {
-        message: data.error || data.message || "Failed to delete course",
+        message: "Failed to delete course",
         statusCode: res.status || 500,
         statusText: res.statusText || "Internal Server Error",
       };
     }
-    return "Success";
+    return res.status === 204 && "Success";
   } catch (err) {
     throw {
       message: err.message || "Network Error",
