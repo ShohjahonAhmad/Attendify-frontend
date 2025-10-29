@@ -24,13 +24,13 @@ export async function action({request}) {
 
 }
 
-const Curator = () => {
+const Courses = () => {
     const [createMode, setCreateMode] = useState(false);
     const loaderData = useLoaderData();
     const [courses, setCourses] = useState(loaderData.courses)
     const actionData = useActionData();
     const navigation = useNavigation();
-    const courseCSS = "flex items-center justify-center text-center text-white h-32 bg-indigo-500 hover:bg-indigo-400 cursor-pointer rounded-lg py-6 px-3 text-2xl";
+    const courseCSS = "flex items-center w-full justify-center text-center text-white h-32 bg-indigo-500 hover:bg-indigo-400 cursor-pointer rounded-lg py-6 px-3 text-xl lg:text-2xl";
 
     useEffect(() => {
         if(actionData?.course){
@@ -62,10 +62,22 @@ const Curator = () => {
     })
 
     return (
-        <main className="py-32 px-84">
-            <button 
-            onClick = {() => setCreateMode(prev => !prev)}
-            className="bg-indigo-500 w-16 rounded-md text-white font-bold hover:bg-indigo-400 py-1.5 cursor-pointer px-3 text-4xl">{createMode ? "-" : "+"}</button>
+        <main className="p-4 2xl:py-32 2xl:px-84">
+            <div className="flex items-center">
+                <button 
+                    onClick = {() => setCreateMode(prev => !prev)}
+                    className="bg-indigo-500 w-16 rounded-md text-white font-bold hover:bg-indigo-400 py-1.5 cursor-pointer px-3 text-4xl"
+                >
+                    {createMode ? "-" : "+"}
+                </button>
+
+                {
+                    courses.length === 0 && 
+                    <h1 className="text-white text-lg sm:text-xl/3 md:text-2xl/4 lg:text-3xl/6 xl:text-4xl/9 font-bold tracking-tight ml-1 sm:ml-4">
+                        {"\u{27F5} Add course here"}
+                    </h1>
+                }
+            </div>
             {createMode && 
                 <Form method = "POST" className = "mt-10 space-y-4 p-4 flex flex-col items-center sm:mx-auto sm:w-full sm:max-w-sm">
                     <label htmlFor="name" className="block text-gray-100 font-medium text-3xl/6">Course Name</label>
@@ -83,11 +95,11 @@ const Curator = () => {
                         {navigation.state === "submitting" ? <SubmittingSpinner/> : "Add Course"}
                     </button>
                 </Form>}
-            <div className="grid grid-cols-4 gap-4 mt-10">
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-10">
                 {courseElements}
             </div>
         </main>
     )
 }
 
-export default Curator;
+export default Courses;

@@ -3,7 +3,7 @@ myHeaders.append("Content-type", "application/json");
 myHeaders.append(
   "Authorization",
   "Bearer " +
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkNVUkFUT1IiLCJpYXQiOjE3NjE1OTY2MTMsImV4cCI6MTc2MTY4MzAxM30.Y-QykXnLLdnDmUx3g5miz_ADmn7hEiViaRVvTWnLBwM"
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkNVUkFUT1IiLCJpYXQiOjE3NjE3NTE0MjcsImV4cCI6MTc2MTgzNzgyN30.ajStO5hPfXG-NYsAFqxLHzkuCvf_nxroha0meoQnc-A"
 );
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -130,6 +130,84 @@ export async function deleteCourse(id) {
       };
     }
     return res.status === 204 && "Success";
+  } catch (err) {
+    throw {
+      message: err.message || "Network Error",
+      statusCode: err.statusCode || 500,
+      statusText: err.statusText || "Internal Server Error",
+    };
+  }
+}
+
+export async function getAttendances(id) {
+  try {
+    const res = await fetch(`${baseUrl}/courses/${id}/attendances`, {
+      method: "GET",
+      headers: myHeaders,
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw {
+        message: data.error || data.message || "Failed to fetch attendances",
+        statusCode: res.status || 500,
+        statusText: res.statusText || "Internal Server Error",
+      };
+    }
+
+    return data;
+  } catch (err) {
+    throw {
+      message: err.message || "Network Error",
+      statusCode: err.statusCode || 500,
+      statusText: err.statusText || "Internal Server Error",
+    };
+  }
+}
+
+export async function createAttendance(id) {
+  try {
+    const res = await fetch(`${baseUrl}/courses/${id}/attendances`, {
+      method: "POST",
+      headers: myHeaders,
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw {
+        message: data.error || data.message || "Failed to create attendance",
+        statusCode: res.status || 500,
+        statusText: res.statusText || "Internal Server Error",
+      };
+    }
+
+    return data;
+  } catch (err) {
+    throw {
+      message: err.message || "Network Error",
+      statusCode: err.statusCode || 500,
+      statusText: err.statusText || "Internal Server Error",
+    };
+  }
+}
+
+export async function deleteAttendance(id, ID) {
+  try {
+    const res = await fetch(`${baseUrl}/courses/${id}/attendances/${ID}`, {
+      method: "DELETE",
+      headers: myHeaders,
+    });
+
+    if (!res.ok) {
+      throw {
+        message: "Failed to delete attendance",
+        statusCode: res.status || 500,
+        statusText: res.statusText || "Internal Server Error",
+      };
+    }
+
+    return res.status === 204 && true;
   } catch (err) {
     throw {
       message: err.message || "Network Error",
