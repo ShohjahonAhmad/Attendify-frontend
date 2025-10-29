@@ -21,7 +21,7 @@ const Course = () => {
     const [attendances, setAttendances] = useState(loaderData?.attendances || []);
 
 
-    const courseCSS = "flex items-center justify-center text-center text-white h-32 bg-indigo-500 hover:bg-indigo-400 cursor-pointer rounded-lg py-6 px-3 text-2xl";
+    const courseCSS = "flex items-center justify-center text-center text-white h-32 bg-indigo-500 hover:bg-indigo-400 cursor-pointer rounded-lg py-6 px-3 text-xl lg:text-2xl";
 
     async function addAttendance(){
         try{
@@ -58,7 +58,7 @@ const Course = () => {
                 </Link> 
     })
     
-   return <main className="py-32 px-84">
+   return <main className="p-4 2xl:py-32 2xl:px-84">
             <div className="flex items-center">
                 <button 
                     onClick = {addAttendance}
@@ -68,7 +68,7 @@ const Course = () => {
                 </button>
                 {
                     attendances.length === 0 && 
-                    <h1 className="text-white text-2xl/9 font-bold tracking-tight ml-4">
+                    <h1 className="text-white text-lg sm:text-xl/3 md:text-2xl/4 lg:text-3xl/6 xl:text-4xl/9 font-bold tracking-tight ml-1 sm:ml-4">
                         {"\u{27F5} Add attendance here"}
                     </h1>
                 }
@@ -84,7 +84,7 @@ const Course = () => {
                 </div>
             }
 
-            <div className="grid grid-cols-4 gap-4 mt-10">
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-10">
                 {attendanceElements}
             </div>
           </main>
