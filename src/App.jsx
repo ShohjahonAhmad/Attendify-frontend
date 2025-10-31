@@ -12,7 +12,9 @@ function App() {
       <Route path='/registration' element = {<Registration/>} action = {registrationAction}/>
       <Route path='/courses'>
         <Route index element = {<Courses/>} action = {coursesAction} loader = {coursesLoader}/>
-        <Route path = ':id' element = {<Course/>} loader = {courseLoader}/>
+        <Route path = ':id' element = {<Course/>} loader = {courseLoader}>
+          <Route path = ':id'/>
+        </Route>
       </Route>
       <Route path = '*' element = {<h1>Route not found</h1>} />
 
