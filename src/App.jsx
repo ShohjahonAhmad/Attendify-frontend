@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Courses, {action as coursesAction, loader as coursesLoader} from './pages/Courses';
 import Course, {loader as courseLoader} from './pages/Course'
 import Registration, {action as registrationAction} from './pages/Registration';
+import Attendance from './pages/Attendance';
 function App() {
   const router = createBrowserRouter(createRoutesFromElements(
     <Route>
@@ -12,9 +13,8 @@ function App() {
       <Route path='/registration' element = {<Registration/>} action = {registrationAction}/>
       <Route path='/courses'>
         <Route index element = {<Courses/>} action = {coursesAction} loader = {coursesLoader}/>
-        <Route path = ':id' element = {<Course/>} loader = {courseLoader}>
-          <Route path = ':id'/>
-        </Route>
+        <Route path = ':id' element = {<Course/>} loader = {courseLoader}/>
+        <Route path = ':id/attendances/:attendanceId' element = {<Attendance/>}/>
       </Route>
       <Route path = '*' element = {<h1>Route not found</h1>} />
 

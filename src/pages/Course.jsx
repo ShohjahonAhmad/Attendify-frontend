@@ -45,7 +45,7 @@ const Course = () => {
     }
     
     const attendanceElements = attendances.map(attendance => {
-        return <Link to = {attendance.id} className="relative" key = {attendance.id} >
+        return <Link to = {`attendances/${attendance.id}`} className="relative" key = {attendance.id} state = {attendance} >
                     <div className={courseCSS}>{formatDate(new Date(attendance.createdAt))}</div>
                     <i onClick = {e => {
                         e.preventDefault();

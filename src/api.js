@@ -3,7 +3,7 @@ myHeaders.append("Content-type", "application/json");
 myHeaders.append(
   "Authorization",
   "Bearer " +
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkNVUkFUT1IiLCJpYXQiOjE3NjE3NTE0MjcsImV4cCI6MTc2MTgzNzgyN30.ajStO5hPfXG-NYsAFqxLHzkuCvf_nxroha0meoQnc-A"
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkNVUkFUT1IiLCJpYXQiOjE3NjE5OTY1MTUsImV4cCI6MTc2MjA4MjkxNX0.mwvQyJUJr9a2grRyHO1TuY-B9eRFAtcTc5AwQyiuy4Q"
 );
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
