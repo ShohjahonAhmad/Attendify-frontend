@@ -1,9 +1,13 @@
-import { Link, useLoaderData, useParams } from "react-router-dom";
+import { Link, useLoaderData, useNavigation, useParams } from "react-router-dom";
 import { createAttendance, deleteAttendance, getAttendances } from "../api";
 import { useState } from "react";
 import formatDate from "../utils/formatDate";
+import Spinner from "../utils/spinner";
 
 export async function loader({params}){
+    if(!localStorage.getItem("token")){
+        redirect('/login')
+    }
     try{
         const data = await getAttendances(params.id);
         return data;
@@ -19,18 +23,18 @@ const Course = () => {
     const params = useParams();
     const loaderData = useLoaderData();
     const [attendances, setAttendances] = useState(loaderData?.attendances || []);
-
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const courseCSS = "flex items-center justify-center text-center text-white h-32 bg-indigo-500 hover:bg-indigo-400 cursor-pointer rounded-lg py-6 px-3 text-xl lg:text-2xl";
 
-    async function addAttendance(){
-        try{
-            const data = await createAttendance(params.id);
-            console.log(data)
-            setAttendances(prev => [...prev, data.attendance])
-        } catch(err) {
-            loaderData.message = err.message
-        }
+    function addAttendance(){
+            setLoading(true);
+            setError(null);
+            createAttendance(params.id)
+            .then(data => setAttendances(prev => [...prev, data.attendance]))
+            .catch(error => setError(error))
+            .finally(() => setLoading(false))
     }
 
     async function removeAttendance(id) {
@@ -64,7 +68,7 @@ const Course = () => {
                     onClick = {addAttendance}
                     className="bg-indigo-500 w-16 rounded-md text-white font-bold hover:bg-indigo-400 py-1.5 cursor-pointer px-3 text-4xl"
                 >
-                    +
+                    {loading ? <Spinner/> : "+"}
                 </button>
                 {
                     attendances.length === 0 && 

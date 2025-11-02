@@ -5,16 +5,17 @@ import Courses, {action as coursesAction, loader as coursesLoader} from './pages
 import Course, {loader as courseLoader} from './pages/Course'
 import Registration, {action as registrationAction} from './pages/Registration';
 import Attendance from './pages/Attendance';
+import requireAuth from './requireAuth';
 function App() {
   const router = createBrowserRouter(createRoutesFromElements(
     <Route>
       <Route path = '/' element = {<Home />}/>
       <Route path='/login' element = {<Login />} action = {loginAction} loader = {loginLoader}/>
       <Route path='/registration' element = {<Registration/>} action = {registrationAction}/>
-      <Route path='/courses'>
+      <Route path='/courses' loader = {() => requireAuth()}>
         <Route index element = {<Courses/>} action = {coursesAction} loader = {coursesLoader}/>
         <Route path = ':id' element = {<Course/>} loader = {courseLoader}/>
-        <Route path = ':id/attendances/:attendanceId' element = {<Attendance/>}/>
+        <Route path = ':id/attendances/:attendanceId' element = {<Attendance/>} loader = {() => requireAuth()}/>
       </Route>
       <Route path = '*' element = {<h1>Route not found</h1>} />
 

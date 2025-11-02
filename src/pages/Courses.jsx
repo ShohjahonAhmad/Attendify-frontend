@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
-import { Form, useActionData, useLoaderData, Link, useNavigation } from "react-router-dom";
+import { Form, useActionData, useLoaderData, Link, useNavigation, redirect } from "react-router-dom";
 import { createCourse, getCourses, deleteCourse } from "../api";
 import SubmittingSpinner from "../utils/SubmittingSpinner";
 
 export async function loader(){
+    if(!localStorage.getItem("token")){
+        redirect('/login')
+    }
     try{
         const data = await getCourses();
         return data;

@@ -10,7 +10,7 @@ export async function action ({request}) {
     try{
         const data = await login({email, password});
         localStorage.setItem("token", data.token);
-        return redirect("/")
+        return redirect("/courses")
     } catch (err) {
         console.log(err)
         return err.message

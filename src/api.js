@@ -1,10 +1,7 @@
+const token = localStorage.getItem("token");
 const myHeaders = new Headers();
 myHeaders.append("Content-type", "application/json");
-myHeaders.append(
-  "Authorization",
-  "Bearer " +
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkNVUkFUT1IiLCJpYXQiOjE3NjE5OTY1MTUsImV4cCI6MTc2MjA4MjkxNX0.mwvQyJUJr9a2grRyHO1TuY-B9eRFAtcTc5AwQyiuy4Q"
-);
+myHeaders.append("Authorization", "Bearer " + token);
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
