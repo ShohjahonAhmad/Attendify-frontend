@@ -6,7 +6,7 @@ import Spinner from "../utils/spinner";
 
 export async function loader({params}){
     if(!localStorage.getItem("token")){
-        redirect('/login')
+        return redirect('/login')
     }
     try{
         const data = await getAttendances(params.id);

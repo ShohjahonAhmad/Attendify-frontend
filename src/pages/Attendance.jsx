@@ -4,7 +4,6 @@ import { useRef, useEffect, useState } from "react";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 
 const baseUrl = import.meta.env.VITE_BASE_URL
-const token = localStorage.getItem("token")
 
 const Attendance = () => {
     const [students, setStudents] = useState([]);
@@ -49,6 +48,7 @@ const Attendance = () => {
     useEffect(() => {
         const url = `${baseUrl}/courses/${courseId}/attendances/${attendanceId}/events`;
         const controller = new AbortController();
+        const token = localStorage.getItem("token")
 
         fetchEventSource(url, {
             method: "GET",

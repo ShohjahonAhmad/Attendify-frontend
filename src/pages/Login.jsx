@@ -12,7 +12,7 @@ export async function action ({request}) {
         localStorage.setItem("token", data.token);
         return redirect("/courses")
     } catch (err) {
-        console.log(err)
+        console.log("Error in Login: ",err)
         return err.message
     }
 }
@@ -21,12 +21,13 @@ export async function loader () {
     if (localStorage.getItem("token")){
         return redirect("/");
     }
+
+    return null
 }
 
 const Login = () => {
     const errorMessage = useActionData()
     const navigation = useNavigation()
-    console.log(localStorage.getItem("token"))
     return (
         <>
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">

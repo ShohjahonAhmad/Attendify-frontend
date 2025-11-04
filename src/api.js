@@ -1,15 +1,13 @@
-const token = localStorage.getItem("token");
-const myHeaders = new Headers();
-myHeaders.append("Content-type", "application/json");
-myHeaders.append("Authorization", "Bearer " + token);
-
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
 export async function login(loginData) {
   try {
+    console.log(loginData);
     const res = await fetch(`${baseUrl}/auth/login`, {
       method: "POST",
-      headers: myHeaders,
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(loginData),
     });
 
@@ -36,7 +34,9 @@ export async function register(registerData) {
   try {
     const res = await fetch(`${baseUrl}/auth/registration`, {
       method: "POST",
-      headers: myHeaders,
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(registerData),
     });
 
@@ -62,9 +62,13 @@ export async function register(registerData) {
 
 export async function createCourse(name) {
   try {
+    const token = localStorage.getItem("token");
     const res = await fetch(`${baseUrl}/courses`, {
       method: "POST",
-      headers: myHeaders,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify(name),
     });
 
@@ -88,9 +92,12 @@ export async function createCourse(name) {
 
 export async function getCourses() {
   try {
+    const token = localStorage.getItem("token");
     const res = await fetch(`${baseUrl}/curators/courses`, {
       method: "GET",
-      headers: myHeaders,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     const data = await res.json();
@@ -114,9 +121,12 @@ export async function getCourses() {
 
 export async function deleteCourse(id) {
   try {
+    const token = localStorage.getItem("token");
     const res = await fetch(`${baseUrl}/courses/${id}`, {
       method: "DELETE",
-      headers: myHeaders,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (!res.ok) {
@@ -138,9 +148,12 @@ export async function deleteCourse(id) {
 
 export async function getAttendances(id) {
   try {
+    const token = localStorage.getItem("token");
     const res = await fetch(`${baseUrl}/courses/${id}/attendances`, {
       method: "GET",
-      headers: myHeaders,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
     const data = await res.json();
 
@@ -164,9 +177,13 @@ export async function getAttendances(id) {
 
 export async function createAttendance(id) {
   try {
+    const token = localStorage.getItem("token");
     const res = await fetch(`${baseUrl}/courses/${id}/attendances`, {
       method: "POST",
-      headers: myHeaders,
+      headers: {
+        ContentType: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     const data = await res.json();
@@ -191,9 +208,12 @@ export async function createAttendance(id) {
 
 export async function deleteAttendance(id, ID) {
   try {
+    const token = localStorage.getItem("token");
     const res = await fetch(`${baseUrl}/courses/${id}/attendances/${ID}`, {
       method: "DELETE",
-      headers: myHeaders,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (!res.ok) {
