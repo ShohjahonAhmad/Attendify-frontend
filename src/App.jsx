@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Courses, {action as coursesAction, loader as coursesLoader} from './pages/Courses';
 import Course, {loader as courseLoader} from './pages/Course'
 import Registration, {action as registrationAction} from './pages/Registration';
+import StudentAccounts from './pages/StudentAccounts';
 import Attendance from './pages/Attendance';
 import requireAuth from './requireAuth';
 function App() {
@@ -12,6 +13,7 @@ function App() {
       <Route path = '/' element = {<Home />}/>
       <Route path='/login' element = {<Login />} action = {loginAction} loader = {loginLoader}/>
       <Route path='/registration' element = {<Registration/>} action = {registrationAction}/>
+      <Route path='/student-accounts' element={<StudentAccounts/>}/>
       <Route path='/courses' loader = {() => requireAuth()}>
         <Route index element = {<Courses/>} action = {coursesAction} loader = {coursesLoader}/>
         <Route path = ':id' element = {<Course/>} loader = {courseLoader}/>

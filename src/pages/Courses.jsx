@@ -4,7 +4,6 @@ import { createCourse, getCourses, deleteCourse } from "../api";
 import SubmittingSpinner from "../utils/SubmittingSpinner";
 
 export async function loader(){
-
     if(!localStorage.getItem("token")){
         return redirect('/login')
     }
