@@ -13,7 +13,7 @@ function App() {
       <Route path = '/' element = {<Home />}/>
       <Route path='/login' element = {<Login />} action = {loginAction} loader = {loginLoader}/>
       <Route path='/registration' element = {<Registration/>} action = {registrationAction}/>
-      <Route path='/student-accounts' element={<StudentAccounts/>}/>
+      <Route path='/student-accounts' element={<StudentAccounts/>} loader={() => requireAuth()}/>
       <Route path='/courses' loader = {() => requireAuth()}>
         <Route index element = {<Courses/>} action = {coursesAction} loader = {coursesLoader}/>
         <Route path = ':id' element = {<Course/>} loader = {courseLoader}/>
