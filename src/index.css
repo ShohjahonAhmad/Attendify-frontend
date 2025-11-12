@@ -35,9 +35,5 @@ body {
   background: #1f2937; /* track (gray-800) */
 }
 
-#file::placeholder {
-  color: black;
-  background-color: yellow; /* works in some browsers */
-  opacity: 1; /* override default transparency */
-}
+
 

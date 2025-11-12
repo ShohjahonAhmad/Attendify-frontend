@@ -233,3 +233,36 @@ export async function deleteAttendance(id, ID) {
     };
   }
 }
+
+export async function bulkCreateStudents(students) {
+  console.log({ students });
+  try {
+    const token = localStorage.getItem("token");
+    const res = await fetch(`${baseUrl}/students/bulk`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ students }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw {
+        message: data.error || data.message || "Failed to bulk create students",
+        statusCode: res.status || 500,
+        statusText: res.statusText || "Internal Server Error",
+      };
+    }
+
+    return data;
+  } catch (err) {
+    throw {
+      message: err.message || "Network Error",
+      statusCode: err.statusCode || 500,
+      statusText: err.statusText || "Internal Server Error",
+    };
+  }
+}
