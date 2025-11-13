@@ -39,7 +39,7 @@ const Attendance = () => {
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = `attendance_${attendanceId}.svg`
+        link.download = `attendance_${attendanceId}.svg`;
         link.click();
 
         URL.revokeObjectURL(url);
@@ -48,7 +48,7 @@ const Attendance = () => {
     useEffect(() => {
         const url = `${baseUrl}/courses/${courseId}/attendances/${attendanceId}/events`;
         const controller = new AbortController();
-        const token = localStorage.getItem("token")
+        const token = localStorage.getItem("token");
 
         fetchEventSource(url, {
             method: "GET",
@@ -73,7 +73,7 @@ const Attendance = () => {
                 controller.abort();
             },
         }, );
-        return () => controller.abort()
+        return () => controller.abort();
     }, [])
 
     return (
@@ -119,4 +119,4 @@ const Attendance = () => {
     )
 }
 
-export default Attendance
+export default Attendance;
