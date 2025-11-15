@@ -8,11 +8,13 @@ import {
   Platform,
   Button,
   Pressable,
+  ActivityIndicator,
 } from "react-native";
 
 export default function App() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   return (
     <View style={styles.container}>
@@ -44,11 +46,22 @@ export default function App() {
         <View style={styles.buttonWrapper}>
           <Pressable
             style={({ pressed }) => [
-              { backgroundColor: pressed ? "9395f6" : "#6366F1" },
+              {
+                backgroundColor: pressed ? "#9395f6" : "#6366F1",
+                textAlign: "center",
+                paddingVertical: 12,
+                borderRadius: 8,
+                alignItems: "center",
+                transform: [{ scale: pressed ? 0.96 : 1 }],
+              },
             ]} // Indigo-500
             onPress={() => console.log(email, password)}
           >
-            <Text>Log in</Text>
+            {isLoading ? (
+              <ActivityIndicator size="small" color="lightblue" />
+            ) : (
+              <Text style={styles.buttonText}>Log in</Text>
+            )}
           </Pressable>
         </View>
       </KeyboardAvoidingView>
@@ -97,5 +110,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
     overflow: "hidden",
     borderRadius: 8,
+  },
+  buttonText: {
+    textAlign: "center",
+    color: "white",
+    fontWeight: "bold",
   },
 });
