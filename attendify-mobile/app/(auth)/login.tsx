@@ -8,7 +8,12 @@ import {
   Platform,
   Pressable,
   ActivityIndicator,
+  Keyboard,
+  TouchableWithoutFeedback,
+  StatusBar,
 } from "react-native";
+
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function App() {
   const [email, setEmail] = useState<string>("");
@@ -16,55 +21,58 @@ export default function App() {
   const [isLoading, setLoading] = useState<boolean>(false);
 
   return (
-    <View style={styles.container}>
-      <KeyboardAvoidingView
-        style={styles.login}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
-        <Text style={styles.title}>Login</Text>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="light-content" />
+        <KeyboardAvoidingView
+          style={{
+            flex: 1,
+            width: "100%",
+            paddingHorizontal: 16,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <View style={styles.login}>
+            <Text style={styles.title}>Login</Text>
 
-        <TextInput
-          value={email}
-          onChangeText={setEmail}
-          placeholder="e.g. example@example.com"
-          placeholderTextColor="#9ca3af" // gray-400
-          keyboardType="email-address"
-          autoCapitalize="none"
-          style={styles.input}
-        />
+            <TextInput
+              value={email}
+              onChangeText={setEmail}
+              placeholder="e.g. example@example.com"
+              placeholderTextColor="#9ca3af" // gray-400
+              keyboardType="email-address"
+              autoCapitalize="none"
+              style={styles.input}
+            />
 
-        <TextInput
-          value={password}
-          onChangeText={setPassword}
-          placeholder="e.g. password123!"
-          placeholderTextColor="#9ca3af"
-          secureTextEntry
-          style={styles.input}
-        />
+            <TextInput
+              value={password}
+              onChangeText={setPassword}
+              placeholder="e.g. password123!"
+              placeholderTextColor="#9ca3af"
+              secureTextEntry
+              style={styles.input}
+            />
 
-        <View style={styles.buttonWrapper}>
-          <Pressable
-            style={({ pressed }) => [
-              {
-                backgroundColor: pressed ? "#9395f6" : "#6366F1",
-                textAlign: "center",
-                paddingVertical: 12,
-                borderRadius: 8,
-                alignItems: "center",
-                transform: [{ scale: pressed ? 0.96 : 1 }],
-              },
-            ]} // Indigo-500
-            onPress={() => console.log(email, password)}
-          >
-            {isLoading ? (
-              <ActivityIndicator size="small" color="lightblue" />
-            ) : (
-              <Text style={styles.buttonText}>Log in</Text>
-            )}
-          </Pressable>
-        </View>
-      </KeyboardAvoidingView>
-    </View>
+            <Pressable
+              style={({ pressed }) => [
+                styles.button,
+                pressed && styles.buttonPressed,
+              ]} // Indigo-500
+              onPress={() => console.log(email, password)}
+            >
+              {isLoading ? (
+                <ActivityIndicator size="small" color="lightblue" />
+              ) : (
+                <Text style={styles.buttonText}>Log in</Text>
+              )}
+            </Pressable>
+          </View>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -72,8 +80,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#0f0f0f", // pure dark
-    alignItems: "center",
-    justifyContent: "center",
   },
 
   login: {
@@ -83,7 +89,8 @@ const styles = StyleSheet.create({
     borderColor: "#6366F1", // indigo-500 border
     backgroundColor: "#1a1a1a", // dark card
     gap: 12,
-    width: "80%",
+    width: "100%",
+    maxWidth: 400,
     borderRadius: 12,
   },
 
@@ -105,14 +112,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 
-  buttonWrapper: {
-    marginTop: 10,
-    overflow: "hidden",
-    borderRadius: 8,
-  },
   buttonText: {
     textAlign: "center",
     color: "white",
     fontWeight: "bold",
+  },
+
+  button: {
+    textAlign: "center",
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 8,
+    backgroundColor: "#6366F1", // indigo-500
+  },
+
+  buttonPressed: {
+    transform: [{ scale: 0.96 }],
+    backgroundColor: "#9395f6", // indigo-400
   },
 });

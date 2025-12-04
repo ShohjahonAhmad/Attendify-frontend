@@ -2,13 +2,13 @@
   "expo": {
     "name": "attendify-mobile",
     "slug": "attendify-mobile",
+    "scheme": "attendifymobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "experiments": {
-      "router": true
     },
     "splash": {
       "image": "./assets/splash-icon.png",
