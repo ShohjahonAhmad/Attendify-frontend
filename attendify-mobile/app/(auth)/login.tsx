@@ -14,12 +14,26 @@ import {
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import login from "../../api/auth/login";
 
 export default function App() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isLoading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const [isPasswordVisible, setPasswordVisible] = useState<boolean>(false);
+
+  async function handleLogin() {
+    setLoading(true);
+
+    try {
+      await login(email, password);
+      setLoading(false);
+    } catch (err: any) {
+      setLoading(false);
+      setError(err.statusText || "An error occurred. Please try again.");
+    }
+  }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -30,6 +44,8 @@ export default function App() {
         >
           <View style={styles.login}>
             <Text style={styles.title}>Login</Text>
+
+            {error && <Text style={styles.errorText}>{error}</Text>}
 
             <TextInput
               value={email}
@@ -75,7 +91,7 @@ export default function App() {
                 styles.button,
                 pressed && styles.buttonPressed,
               ]} // Indigo-500
-              onPress={() => console.log(email, password)}
+              onPress={handleLogin}
               accessibilityLabel="Log in button"
               accessible
             >
@@ -155,5 +171,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     justifyContent: "center",
     alignItems: "center",
+  },
+
+  errorText: {
+    color: "red",
+    textAlign: "center",
   },
 });
