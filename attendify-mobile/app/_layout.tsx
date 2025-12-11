@@ -1,9 +1,17 @@
 import { Stack } from "expo-router";
+import { useState, useEffect } from "react";
 import { StatusBar } from "react-native";
-
-export const isLoggedIn = false;
-//   localStorage.getItem("isLoggedIn") === "true" || false;
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function RootTabNavigator() {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  useEffect(() => {
+    async function checkAuth() {
+      const token = await AsyncStorage.getItem("authToken");
+      setIsLoggedIn(token !== null);
+    }
+
+    checkAuth();
+  }, []);
   return (
     <>
       <StatusBar barStyle="light-content" />

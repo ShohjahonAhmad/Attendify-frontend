@@ -25,6 +25,7 @@ export default function App() {
 
   async function handleLogin() {
     setLoading(true);
+    setError(null);
 
     try {
       await login(email, password);

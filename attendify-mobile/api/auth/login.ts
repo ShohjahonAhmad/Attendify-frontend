@@ -1,8 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import BASE_URL from "../url";
 
 export default async function login (email: string, password: string) {
     try {
-        const response = await fetch('http://192.168.0.99/auth/student', {
+        const response = await fetch(`${BASE_URL}/auth/student`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
