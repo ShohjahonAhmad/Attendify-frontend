@@ -19,7 +19,8 @@ export default async function getUser(){
             }
         }
         const data = await response.json();
-
+        
+        await AsyncStorage.setItem('userData', JSON.stringify(data.student));
         return data.student;
     } catch(err: any){
         console.error("Get user error:", err);
