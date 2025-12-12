@@ -19,13 +19,10 @@ export default function Scanner() {
               try {
                 setIsScanned(true);
                 const jsonData = JSON.parse(data);
-
-                console.log(jsonData);
-
                 await markUser(jsonData);
-              } catch (err) {
-                console.error("Failed to parse QR code data: ", err);
-                Alert.alert("Error", "Invalid QR code", [
+              } catch (err: any) {
+                console.error(err);
+                Alert.alert("Error", err.statusText || "Invalid QR code", [
                   {
                     text: "OK",
                     onPress: () => setIsScanned(false),

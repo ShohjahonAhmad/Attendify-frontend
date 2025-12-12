@@ -5,6 +5,7 @@ import { useCameraPermissions } from "expo-camera";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 import getUser from "../../api/user/getUser";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type User = {
   id: number;
@@ -22,6 +23,9 @@ export default function Home() {
   const router = useRouter();
   const isPermissionGranted = permission?.granted;
   const [me, setMe] = useState<User | null>(null);
+  const cachedUser: any = AsyncStorage.getItem("userData").then((data) =>
+    data ? JSON.parse(data) : null
+  );
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -35,7 +39,11 @@ export default function Home() {
       <View style={style.innerContainer}>
         <View style={style.welcomeContainer}>
           <Text style={style.userGreetingText}>
-            Welcome, {me?.firstName} {me?.lastName}
+            Welcome,{" "}
+            {me
+              ? `${me?.firstName} ${me?.lastName}`
+              : `${cachedUser.firstName} ${cachedUser.lastName}`}
+            !
           </Text>
         </View>
         <View style={style.buttonContainer}>
