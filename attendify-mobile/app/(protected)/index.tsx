@@ -23,15 +23,31 @@ export default function Home() {
   const router = useRouter();
   const isPermissionGranted = permission?.granted;
   const [me, setMe] = useState<User | null>(null);
-  const cachedUser: any = AsyncStorage.getItem("userData").then((data) =>
-    data ? JSON.parse(data) : null
-  );
+  const [cachedUser, setCachedUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const fetchCachedUser = async () => {
+      try {
+        const userData = await AsyncStorage.getItem("userData");
+        if (userData) {
+          setCachedUser(JSON.parse(userData));
+        }
+      } catch (err) {
+        console.error("Failed to fetch cached user data:", err);
+      }
+    };
+    fetchCachedUser();
+
     getUser()
-      .then((userData) => setMe(userData))
-      .catch((err) => setError(err.statusText || "Failed to fetch user data"));
+      .then((userData) => {
+        setMe(userData);
+        AsyncStorage.setItem("userData", JSON.stringify(userData));
+      })
+      .catch((err) => {
+        console.error("Failed to fetch user data:", err);
+        setError(err.statusText || "Failed to fetch user data");
+      });
   }, []);
 
   return (
@@ -42,7 +58,9 @@ export default function Home() {
             Welcome,{" "}
             {me
               ? `${me?.firstName} ${me?.lastName}`
-              : `${cachedUser.firstName} ${cachedUser.lastName}`}
+              : cachedUser
+              ? `${cachedUser.firstName} ${cachedUser.lastName}`
+              : "Student"}
             !
           </Text>
         </View>

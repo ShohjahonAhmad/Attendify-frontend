@@ -21,7 +21,7 @@ export default function Scanner() {
                 const jsonData = JSON.parse(data);
                 await markUser(jsonData);
               } catch (err: any) {
-                console.error(err);
+                console.error("Failed to mark attendance: ", err);
                 Alert.alert("Error", err.statusText || "Invalid QR code", [
                   {
                     text: "OK",
