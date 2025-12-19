@@ -1,17 +1,14 @@
 import { Stack } from "expo-router";
-import { useState, useEffect } from "react";
 import { StatusBar } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-export default function RootTabNavigator() {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  useEffect(() => {
-    async function checkAuth() {
-      const token = await AsyncStorage.getItem("authToken");
-      setIsLoggedIn(token !== null);
-    }
+import { AuthProvider, useAuth } from "../contexts/AuthContext";
 
-    checkAuth();
-  }, []);
+function RootLayoutNav() {
+  const { isLoggedIn, isLoading } = useAuth();
+
+  if (isLoading) {
+    return null; // Or show a loading screen
+  }
+
   return (
     <>
       <StatusBar barStyle="light-content" />
@@ -24,5 +21,13 @@ export default function RootTabNavigator() {
         </Stack.Protected>
       </Stack>
     </>
+  );
+}
+
+export default function RootTabNavigator() {
+  return (
+    <AuthProvider>
+      <RootLayoutNav />
+    </AuthProvider>
   );
 }

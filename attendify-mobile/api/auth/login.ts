@@ -22,10 +22,7 @@ export default async function login (email: string, password: string) {
     
         const data = await response.json();
     
-        if (data.token) {
-            console.log(data.token);
-            await AsyncStorage.setItem('authToken', data.token);
-        } else {
+        if (!data.token) {
             throw {
                 status: 500,
                 statusText: 'Token not provided. Login failed',

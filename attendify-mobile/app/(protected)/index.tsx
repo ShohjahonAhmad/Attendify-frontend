@@ -1,4 +1,4 @@
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, Pressable, StyleSheet, Modal, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useCameraPermissions } from "expo-camera";
@@ -6,6 +6,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 import getUser from "../../api/user/getUser";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAuth } from "../../contexts/AuthContext";
 
 type User = {
   id: number;
@@ -25,6 +26,19 @@ export default function Home() {
   const [me, setMe] = useState<User | null>(null);
   const [cachedUser, setCachedUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showLogoutModal, setShowLogoutModal] = useState<boolean>(false);
+
+  const { logout }: any = useAuth();
+
+  async function handleLogout() {
+    try {
+      await logout(); // This handles token removal and navigation
+      setShowLogoutModal(false);
+    } catch (err) {
+      console.error("Logout error:", err);
+      Alert.alert("Error", "Failed to logout. Please try again.");
+    }
+  }
 
   useEffect(() => {
     const fetchCachedUser = async () => {
@@ -54,6 +68,12 @@ export default function Home() {
     <SafeAreaView style={style.container}>
       <View style={style.innerContainer}>
         <View style={style.welcomeContainer}>
+          <Pressable
+            onPress={() => setShowLogoutModal(true)}
+            style={{ position: "absolute", top: 25, right: 20 }}
+          >
+            <FontAwesome5 name="sign-out-alt" size={20} color="#EF4444" />
+          </Pressable>
           <Text style={style.userGreetingText}>
             Welcome,{" "}
             {me
@@ -95,6 +115,36 @@ export default function Home() {
             <Text style={style.buttonText}>Mark my attendance</Text>
           </Pressable>
         </View>
+        {/* Logout Modal */}
+        <Modal
+          transparent={true}
+          visible={showLogoutModal}
+          animationType="fade"
+          onRequestClose={() => setShowLogoutModal(false)}
+        >
+          <View style={style.modalOverlay}>
+            <View style={style.modalContent}>
+              <Text style={style.modalTitle}>Confirm Logout</Text>
+              <Text style={style.modalMessage}>
+                Are you sure you want to log out?
+              </Text>
+              <View style={style.modalButtons}>
+                <Pressable
+                  style={[style.button, style.cancelButton]}
+                  onPress={() => setShowLogoutModal(false)}
+                >
+                  <Text style={style.buttonText}>Cancel</Text>
+                </Pressable>
+                <Pressable
+                  style={[style.button, style.logoutButton]}
+                  onPress={handleLogout}
+                >
+                  <Text style={style.buttonText}>Logout</Text>
+                </Pressable>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </View>
     </SafeAreaView>
   );
@@ -116,6 +166,7 @@ const style = StyleSheet.create({
   welcomeContainer: {
     marginBottom: 40,
     flex: 1,
+    justifyContent: "center",
     paddingHorizontal: 20,
   },
 
@@ -154,5 +205,40 @@ const style = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 18,
     textAlign: "center",
+  },
+
+  cancelButton: {
+    backgroundColor: "#9CA3AF",
+  },
+  logoutButton: {
+    backgroundColor: "#EF4444",
+  },
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    borderRadius: 12,
+    padding: 20,
+    width: "80%",
+    maxWidth: 400,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  modalMessage: {
+    fontSize: 16,
+    marginBottom: 20,
+    color: "#666",
+  },
+  modalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });

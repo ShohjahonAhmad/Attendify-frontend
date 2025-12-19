@@ -15,6 +15,8 @@ import {
 import { FontAwesome5 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import login from "../../api/auth/login";
+import { useRouter } from "expo-router";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function App() {
   const [email, setEmail] = useState<string>("");
@@ -22,13 +24,19 @@ export default function App() {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isPasswordVisible, setPasswordVisible] = useState<boolean>(false);
+  const router = useRouter();
+
+  const { login: authLogin }: any = useAuth();
 
   async function handleLogin() {
     setLoading(true);
     setError(null);
 
     try {
-      await login(email, password);
+      const result = await login(email, password);
+      if (result) {
+        await authLogin(result);
+      }
       setLoading(false);
     } catch (err: any) {
       setLoading(false);
