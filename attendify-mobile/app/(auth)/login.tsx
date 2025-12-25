@@ -17,13 +17,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import login from "../../api/auth/login";
 import { useRouter } from "expo-router";
 import { useAuth } from "../../contexts/AuthContext";
+import PasswordInput from "../../components/PasswordInput";
 
 export default function App() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isLoading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [isPasswordVisible, setPasswordVisible] = useState<boolean>(false);
   const router = useRouter();
 
   const { login: authLogin }: any = useAuth();
@@ -66,34 +66,26 @@ export default function App() {
               style={styles.input}
             />
 
-            <View
+            <PasswordInput
+              value={password}
+              onChangeText={setPassword}
+              placeholder="e.g. password123!"
+              placeholderTextColor="#9ca3af"
+              // style={styles.input}
+            />
+
+            <Text
               style={{
-                position: "relative",
+                color: "#6366F1",
+                marginLeft: 4,
+                textDecorationLine: "underline",
+              }}
+              onPress={() => {
+                router.push("forgot-password");
               }}
             >
-              <TextInput
-                value={password}
-                onChangeText={setPassword}
-                placeholder="e.g. password123!"
-                placeholderTextColor="#9ca3af"
-                secureTextEntry={!isPasswordVisible}
-                style={styles.input}
-              />
-
-              <TouchableOpacity
-                style={{ position: "absolute", right: 12, top: 13 }}
-                onPress={() => setPasswordVisible((prev) => !prev)}
-                accessibilityLabel={
-                  isPasswordVisible ? "Hide Password" : "Show Password"
-                }
-              >
-                {isPasswordVisible ? (
-                  <FontAwesome5 name="eye-slash" size={16} color="#6366F1" />
-                ) : (
-                  <FontAwesome5 name="eye" size={16} color="#6366F1" />
-                )}
-              </TouchableOpacity>
-            </View>
+              Forgot password?
+            </Text>
 
             <Pressable
               style={({ pressed }) => [
