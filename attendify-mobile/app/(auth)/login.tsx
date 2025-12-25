@@ -25,6 +25,7 @@ export default function App() {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const isEmpty = email.trim().length == 0 || password.trim().length == 0;
 
   const { login: authLogin }: any = useAuth();
 
@@ -95,6 +96,7 @@ export default function App() {
               onPress={handleLogin}
               accessibilityLabel="Log in button"
               accessible
+              disabled={isLoading || isEmpty}
             >
               {isLoading ? (
                 <ActivityIndicator size="small" color="lightblue" />

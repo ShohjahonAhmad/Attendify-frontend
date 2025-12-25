@@ -1,14 +1,25 @@
-import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import React, { useState } from "react";
 import PasswordInput from "../../components/PasswordInput";
+import { passwordStyles } from "./forgot-password";
 
 export default function ResetPassword() {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const isEmpty =
+    password.trim().length == 0 || confirmPassword.trim().length == 0;
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Change Password</Text>
-      <Text style={styles.desc}>
+    <View style={passwordStyles.container}>
+      <Text style={passwordStyles.title}>Change Password</Text>
+      <Text style={passwordStyles.desc}>
         Enter your new password below to reset your account password.
       </Text>
 
@@ -27,49 +38,19 @@ export default function ResetPassword() {
         />
       </View>
 
-      <Pressable style={styles.button}>
-        <Text style={styles.buttonText}>Reset Password</Text>
+      <Pressable
+        style={({ pressed }) => [
+          passwordStyles.button,
+          pressed && passwordStyles.buttonPressed,
+        ]}
+        disabled={isLoading || isEmpty}
+      >
+        {isLoading ? (
+          <ActivityIndicator size={16} color="lightblue" />
+        ) : (
+          <Text style={passwordStyles.buttonText}>Reset Password</Text>
+        )}
       </Pressable>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#0f0f0f",
-    paddingHorizontal: 16,
-    paddingVertical: 32,
-  },
-  title: {
-    color: "white",
-    fontSize: 24,
-    fontWeight: "600",
-  },
-  desc: {
-    color: "white",
-    fontSize: 16,
-    marginTop: 8,
-  },
-  //   input: {
-  //     backgroundColor: "#111111",
-  //     borderWidth: 1,
-  //     borderColor: "#6366F1",
-  //     color: "white",
-  //     padding: 12,
-  //     borderRadius: 8,
-  //     fontSize: 16,
-  //     marginTop: 24,
-  //   },
-  button: {
-    backgroundColor: "#6366F1",
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 16,
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "bold",
-  },
-});

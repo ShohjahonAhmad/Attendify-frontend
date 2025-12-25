@@ -13,10 +13,11 @@ export default function ForgotPassword() {
   const [email, setEmail] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
+  const isEmpty = email.trim().length == 0;
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Forgot your password?</Text>
-      <Text style={styles.desc}>
+    <View style={passwordStyles.container}>
+      <Text style={passwordStyles.title}>Forgot your password?</Text>
+      <Text style={passwordStyles.desc}>
         We'll send you a verification code to reset your password
       </Text>
 
@@ -25,27 +26,31 @@ export default function ForgotPassword() {
         onChangeText={setEmail}
         placeholder="Email Address"
         placeholderTextColor="#9ca3af"
-        style={styles.input}
+        style={passwordStyles.input}
       />
 
       <Pressable
-        style={styles.button}
+        style={({ pressed }) => [
+          passwordStyles.button,
+          pressed && passwordStyles.buttonPressed,
+        ]}
         accessibilityLabel="Send verification code"
         onPress={() => {
           router.push("verify-reset-code");
         }}
+        disabled={isLoading || isEmpty}
       >
         {isLoading ? (
           <ActivityIndicator size="small" color="lightblue" />
         ) : (
-          <Text style={styles.buttonText}>Send</Text>
+          <Text style={passwordStyles.buttonText}>Send</Text>
         )}
       </Pressable>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+export const passwordStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#0f0f0f",
@@ -82,5 +87,9 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     fontWeight: "bold",
+  },
+  buttonPressed: {
+    transform: [{ scale: 0.96 }],
+    backgroundColor: "#9395f6", // indigo-400
   },
 });
