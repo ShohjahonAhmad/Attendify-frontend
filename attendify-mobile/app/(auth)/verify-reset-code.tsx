@@ -2,11 +2,18 @@ import { StyleSheet, Text, TextInput, View, Pressable } from "react-native";
 import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import { passwordStyles } from "./forgot-password";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function VerifyResetCode() {
   const [code, setCode] = useState<string>("");
   const isEmpty = code.trim().length == 0;
   const router = useRouter();
+  async function handleClick() {
+    const cachedCode = await AsyncStorage.getItem("passwordCode");
+    if (cachedCode == code) {
+      router.push("reset-password");
+    }
+  }
   return (
     <View style={passwordStyles.container}>
       <Text style={passwordStyles.title}>
@@ -28,7 +35,7 @@ export default function VerifyResetCode() {
           pressed && passwordStyles.buttonPressed,
         ]}
         accessibilityLabel="Enter verification code"
-        onPress={() => router.push("reset-password")}
+        onPress={handleClick}
         disabled={isEmpty}
       >
         <Text style={passwordStyles.buttonText}>Verify Code</Text>

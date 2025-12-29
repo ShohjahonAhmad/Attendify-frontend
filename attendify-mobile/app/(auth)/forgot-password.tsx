@@ -8,12 +8,22 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { useRouter } from "expo-router";
+import requestVerificationCode from "../../api/auth/requestVerificationCode";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
   const isEmpty = email.trim().length == 0;
+
+  async function handleClick() {
+    setIsLoading(true);
+    await requestVerificationCode(email);
+    setIsLoading(false);
+    await AsyncStorage.setItem("email", email);
+    router.push("verify-reset-code");
+  }
   return (
     <View style={passwordStyles.container}>
       <Text style={passwordStyles.title}>Forgot your password?</Text>
@@ -35,9 +45,7 @@ export default function ForgotPassword() {
           pressed && passwordStyles.buttonPressed,
         ]}
         accessibilityLabel="Send verification code"
-        onPress={() => {
-          router.push("verify-reset-code");
-        }}
+        onPress={handleClick}
         disabled={isLoading || isEmpty}
       >
         {isLoading ? (
