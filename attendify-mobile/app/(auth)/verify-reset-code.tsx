@@ -1,17 +1,22 @@
-import { StyleSheet, Text, TextInput, View, Pressable } from "react-native";
+import { Text, TextInput, View, Pressable } from "react-native";
 import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import { passwordStyles } from "./forgot-password";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function VerifyResetCode() {
   const [code, setCode] = useState<string>("");
   const isEmpty = code.trim().length == 0;
   const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
   async function handleClick() {
+    setError(null);
     const cachedCode = await AsyncStorage.getItem("passwordCode");
     if (cachedCode == code) {
       router.push("reset-password");
+    } else {
+      setError("Invalid verification code");
     }
   }
   return (
@@ -22,6 +27,12 @@ export default function VerifyResetCode() {
       <Text style={passwordStyles.desc}>
         Please check your inbox and spam folder for the code.
       </Text>
+      {error && (
+        <View style={passwordStyles.errorContainer}>
+          <Ionicons name="alert-circle" size={20} color="#EF4444" />
+          <Text style={passwordStyles.errorText}>{error}</Text>
+        </View>
+      )}
       <TextInput
         value={code}
         onChangeText={setCode}

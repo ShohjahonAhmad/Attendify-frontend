@@ -14,7 +14,7 @@ export default async function resetPassword(email: string, code: string, passwor
             const errorData = await response.json();
             throw {
                 status: response.status,
-                statusText: errorData || "Reset password failed",
+                statusText: errorData || "Reset password failed. Try again later",
             }
         }
 

@@ -10,19 +10,46 @@ import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import requestVerificationCode from "../../api/auth/requestVerificationCode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import isEmail from "../../utils/isEmail";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const isEmpty = email.trim().length == 0;
 
   async function handleClick() {
-    setIsLoading(true);
-    await requestVerificationCode(email);
-    setIsLoading(false);
-    await AsyncStorage.setItem("email", email);
-    router.push("verify-reset-code");
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      if (!email.trim()) {
+        throw {
+          statusText: "Please fill in the field",
+        };
+      }
+
+      if (!isEmail(email)) {
+        throw {
+          statusText: "Invalid email",
+        };
+      }
+      await requestVerificationCode(email);
+      setIsLoading(false);
+      await AsyncStorage.setItem("email", email);
+      router.push("verify-reset-code");
+    } catch (err: any) {
+      if (err.statusText?.error) {
+        setError(err.statusText.error);
+      } else {
+        setError(err.statusText || "An error occured, try again later");
+      }
+      console.error("Error in sending email: ", err);
+    } finally {
+      setIsLoading(false);
+    }
   }
   return (
     <View style={passwordStyles.container}>
@@ -30,6 +57,13 @@ export default function ForgotPassword() {
       <Text style={passwordStyles.desc}>
         We'll send you a verification code to reset your password
       </Text>
+
+      {error && (
+        <View style={passwordStyles.errorContainer}>
+          <Ionicons name="alert-circle" size={20} color="#EF4444" />
+          <Text style={passwordStyles.errorText}>{error}</Text>
+        </View>
+      )}
 
       <TextInput
         value={email}
@@ -46,7 +80,7 @@ export default function ForgotPassword() {
         ]}
         accessibilityLabel="Send verification code"
         onPress={handleClick}
-        disabled={isLoading || isEmpty}
+        disabled={isLoading}
       >
         {isLoading ? (
           <ActivityIndicator size="small" color="lightblue" />
@@ -99,5 +133,24 @@ export const passwordStyles = StyleSheet.create({
   buttonPressed: {
     transform: [{ scale: 0.96 }],
     backgroundColor: "#9395f6", // indigo-400
+  },
+
+  errorContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FEE2E2", // Light red background
+    borderLeftWidth: 4,
+    borderLeftColor: "#EF4444", // Red accent
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 16,
+    marginBottom: 8,
+    gap: 8,
+  },
+  errorText: {
+    color: "#991B1B", // Dark red text
+    fontSize: 14,
+    flex: 1,
+    fontWeight: "500",
   },
 });
