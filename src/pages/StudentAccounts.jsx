@@ -1,7 +1,14 @@
 import {  useState } from "react";
 import Papa from 'papaparse';
-import { bulkCreateStudents } from "../api";
+import { bulkCreateStudents, validateStudentCSV } from "../api";
 import Spinner from "../utils/spinner";
+import ErrorMessage from "../components/ErrorMessage";
+import validateCSV from "../utils/validateCSV";
+
+const csvTemplate = `firstName,lastName,uniqueIdentifier,email,institution
+John,Doe,STU001,john.doe@uni.com,State University
+Jane,Smith,STU002,jane.smith@uni.com,State University
+Mike,Brown,STU003,mike.brown@uni.com,State University`;
 
 const StudentAccounts = () => {
     const defaultState = "File not chosen";
@@ -10,7 +17,7 @@ const StudentAccounts = () => {
     const [students, setStudents] = useState(null);
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false);
-
+    
     const studentElements = students !== null && students.map(student => (
         <tr 
             className="odd:bg-gray-900 even:bg-gray-800 border-b border-gray-700"
@@ -58,12 +65,32 @@ const StudentAccounts = () => {
         try{
             setError(null);
             setLoading(true);
-            const students = await bulkCreateStudents(file) 
+            //Input validation
+            const check = validateCSV(file);
+            if(!check.valid){
+                setLoading(false);
+                setError(check.errorMessage);
+                return;
+            }
+            
+            await validateStudentCSV(file);
+
+            const students = await bulkCreateStudents(file); 
             setStudents(students.students);
             setLoading(false);
         } catch(err){
             setLoading(false)
-            setError(err)
+            console.log(err)
+            if(err.message.existingStudents){
+                
+                let errorMessage = "Please remove given student's rows from the CSV:\n";
+                for(let student of err.message.existingStudents){
+                    errorMessage += `${student.email} - ${student.uniqueIdentifier}: ${student.reason}\n`;
+                }
+                setError(errorMessage)
+            } else {
+                setError(err.message || "Failed to process the CSV file")
+            }
         }
     }
 
@@ -118,17 +145,34 @@ const StudentAccounts = () => {
                     </button>
                 </div>
             </div>
-            {
-                students !== null &&
-                <div className="flex justify-end mt-8">
-                    <button 
-                        className="ext-lg text-white bg-indigo-500 hover:bg-indigo-400 cursor-pointer rounded-md px-3 py-1.5 font-semibold text-center "
-                        onClick={downloadCSV}    
-                    >
-                        Download CSV
-                    </button>
+            
+                
+                <div className="flex justify-between mt-8">
+
+                    <div className="relative group">
+                        <button className="bg-indigo-500 text-white rounded-full w-10 h-10 font-bold">?</button>
+                        <div className="invisible group-hover:visible absolute top-12 left-0 bg-gray-800 text-gray-200 text-sm rounded-md p-3 w-96 shadow-lg z-10">
+                            <p className="font-semibold text-white mb-2">CSV Format Example:</p>
+                            <pre className="text-xs text-green-400 whitespace-pre-wrap break-all">
+                                {csvTemplate}
+                            </pre>
+                        </div>
+                    </div>
+
+                    {error != null && 
+                        <ErrorMessage error={error} setError={setError}/>
+                    }
+
+                    {students !== null && 
+                        <button 
+                            className="self-start text-white bg-indigo-500 hover:bg-indigo-400 cursor-pointer rounded-md px-3 py-1.5 font-semibold text-center"
+                            onClick={downloadCSV}    
+                        >
+                            Download CSV
+                        </button>
+                    }
                 </div>
-            }
+            
             {
                 students !== null && 
                 <div className="sm:rounded-lg shadow-md relative overflow-x-auto w-full custom-scrollbar">

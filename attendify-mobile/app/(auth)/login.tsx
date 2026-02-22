@@ -72,7 +72,7 @@ export default function App() {
               onChangeText={setPassword}
               placeholder="e.g. password123!"
               placeholderTextColor="#9ca3af"
-              // style={styles.input}
+              style={styles.input}
             />
 
             <Text
